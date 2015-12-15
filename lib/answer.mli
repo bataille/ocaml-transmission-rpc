@@ -154,6 +154,18 @@ module Torrent : sig
     val parse : Yojson.Safe.json -> (field list list, string) result 
   end
 
+  module Add : sig
+    type info = {
+      id : int;
+      name : string;
+      hashString : string
+    }
+
+    type t = TorrentAdded of info | TorrentDuplicate of info
+
+    val parse : Yojson.Safe.json -> (t, string) result
+  end
+
   module RenamePath : sig
     type t = {
       path : string;

@@ -83,6 +83,27 @@ module Torrent : sig
     val arguments_to_yojson : arguments -> Yojson.Safe.json
   end
 
+  module Add : sig
+    type to_add = [ `Filename of string | `Metainfo of string ]
+
+    type arguments = {
+      cookies : string option;
+      download_dir : string option;
+      filename : string option;
+      metainfo : string option;
+      paused : bool option;
+      peer_limit : int option;
+      bandwithPriority : int option;
+      files_wanted : int list option;
+      files_unwanted : int list option;
+      priority_hight : int list option;
+      priority_low : int list option;
+      priority_normal : int list option
+    }
+
+    val arguments_to_yojson : arguments -> Yojson.Safe.json
+  end
+
   module Remove : sig
     type arguments = {
       ids : ids;

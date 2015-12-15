@@ -283,6 +283,31 @@ module Torrent = struct
       >>= fun t -> Ok t.torrents
   end
 
+  module Add = struct
+    type info = {
+      id : int;
+      name : string;
+      hashString : string
+    } [@@deriving of_yojson]
+
+    type t = TorrentAdded of info | TorrentDuplicate of info
+
+    type return = {
+      torrent_added : (info option [@default None])[@key "torrent-added"];
+      torrent_duplicate : (info option [@default None])
+        [@key "torrent-duplicate"]
+    } [@@deriving of_yojson]
+
+    let parse json =
+      let get_option = function Some t -> t |_ -> assert false in
+      return_of_yojson json |> PolyResult.to_result
+      >>= fun t -> 
+        if t.torrent_added = None then 
+          Ok (TorrentDuplicate (get_option t.torrent_duplicate))
+        else
+          Ok (TorrentAdded (get_option t.torrent_added))
+  end
+  
   module RenamePath = struct
     type t = {
       path : string;

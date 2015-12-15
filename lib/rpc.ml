@@ -34,7 +34,8 @@ let get_return_arguments returned =
 let no_return returned =
   match get_return_arguments returned with
   | Ok `Null -> Ok ()
-  | Ok _ -> assert false
+  | Ok json  -> 
+      Error ("Unexpected return value:" ^ Yojson.Safe.to_string json)
   | Error e -> Error e
 
 let no_arg_method_no_return method_name =
@@ -62,6 +63,41 @@ module Torrent = struct
     |> Client.post ~client
     |> get_return_arguments
     >>= Answer.Torrent.Get.parse
+
+  let add ~client 
+      ?cookies:(cookies=None)
+      ?download_dir:(download_dir=None)
+      ?paused:(paused=None)
+      ?peer_limit:(peer_limit=None)
+      ?bandwithPriority:(bandwithPriority=None)
+      ?files_wanted:(files_wanted=None)
+      ?files_unwanted:(files_unwanted=None)
+      ?priority_hight:(priority_hight=None)
+      ?priority_low:(priority_low=None)
+      ?priority_normal:(priority_normal=None)
+      to_add =
+    let open Request.Torrent.Add in
+    let metainfo = (function `Metainfo m -> Some m |_ -> None) to_add in
+    let filename = (function `Filename f -> Some f |_ -> None) to_add in
+    `Assoc [
+      ("method", `String "torrent-add");
+      ("arguments", {
+          cookies = cookies;
+          download_dir = download_dir;
+          filename = filename;
+          metainfo = metainfo;
+          paused = paused;
+          peer_limit = peer_limit;
+          bandwithPriority = bandwithPriority;
+          files_wanted = files_wanted;
+          files_unwanted = files_unwanted;
+          priority_hight = priority_hight;
+          priority_low = priority_low;
+          priority_normal = priority_normal;
+        } |> arguments_to_yojson)] 
+    |> Client.post ~client
+    |> get_return_arguments
+    >>= Answer.Torrent.Add.parse
 
   let remove ~client ?delete_local_data:(dlt=false) ~ids =
     let open Request.Torrent.Remove in

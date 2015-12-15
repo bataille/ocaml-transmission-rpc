@@ -106,7 +106,7 @@ Rpc.Session.stats ~client
 | torrent-verify       | ✓           |
 | torrent-set          |             |
 | torrent-get          | ✓           |
-| torrent-add          |             |
+| torrent-add          | ✓           |
 | torrent-remove       | ✓           |
 | torrent-set-location | ✓           |
 | torrent-rename-path  | ✓           |
@@ -126,6 +126,5 @@ Rpc.Session.stats ~client
 
 * Write code to support the remaining methods:
   + torrent-set
-  + torrent-add
   + session-set
 * Write proper testing

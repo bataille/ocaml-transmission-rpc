@@ -163,6 +163,28 @@ module Torrent = struct
     } [@@deriving to_yojson]
   end
 
+  module Add = struct
+    type to_add = [ `Filename of string | `Metainfo of string ]
+    type arguments = {
+      cookies : (string option [@default None]);
+      download_dir : (string option [@default None]);
+      filename : (string option [@default None]);
+      metainfo : (string option [@default None]);
+      paused : (bool option [@default None]);
+      peer_limit : (int option [@default None])[@key "peer-limit"];
+      bandwithPriority : (int option [@default None]);
+      files_wanted : (int list option [@default None]);
+      files_unwanted : (int list option [@default None])
+        [@key "files-unwanted"];
+      priority_hight: (int list option [@default None])
+        [@key "priority-hight"];
+      priority_low: (int list option [@default None])
+        [@key "priority-low"];
+      priority_normal: (int list option [@default None])
+        [@key "priority-normal"]
+    }[@@deriving to_yojson]
+  end
+  
   module Remove = struct
     type arguments = {
       ids : ids;
