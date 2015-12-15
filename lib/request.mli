@@ -5,6 +5,34 @@ module Torrent : sig
   type arguments = { ids : ids }
   val arguments_to_yojson : arguments -> Yojson.Safe.json
 
+  module Set : sig
+    type arguments = {
+      bandwidthPriority : int option;
+      downloadLimit : int option;
+      downloadLimited : bool option;
+      files_wanted : int list option;
+      files_unwanted : int list option;
+      honorsSessionLimits : bool option;
+      ids : ids;
+      location : string option;
+      peer_limit : int option;
+      priority_high : int list option;
+      priority_low : int list option;
+      priority_normal : int list option;
+      queuePosition : int option;
+      seedIdleLimit : int option;
+      seedIdleMode : int option;
+      seedRatioLimit : float option;
+      seedRatioMode : int option;
+      trackerAdd : string list option;
+      trackerRemove : int list option;
+      trackerReplace : (int*string) list option;
+      uploadLimit : int option;
+      uploadLimited : bool option
+    }
+    val arguments_to_yojson : arguments -> Yojson.Safe.json
+  end
+
   module Get : sig
     type field_name = [
       `ActivityDate

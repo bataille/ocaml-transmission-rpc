@@ -14,6 +14,35 @@ module Torrent = struct
   type arguments = { ids : ids } [@@deriving to_yojson]
 
   module Set = struct
+    type arguments = {
+      bandwidthPriority : (int option [@default None]);
+      downloadLimit : (int option [@default None]);
+      downloadLimited : (bool option [@default None]);
+      files_wanted : (int list option [@default None])
+        [@key "files-wanted"];
+      files_unwanted : (int list option [@default None])
+        [@key "files-unwanted"];
+      honorsSessionLimits : (bool option [@default None]);
+      ids : ids;
+      location : (string option [@default None]);
+      peer_limit : (int option [@default None])[@key "peer-limit"];
+      priority_high : (int list option [@default None])
+        [@key "priority-high"];
+      priority_low : (int list option [@default None])
+        [@key "priority-low"];
+      priority_normal : (int list option [@default None])
+        [@key "priority-normal"];
+      queuePosition : (int option [@default None]);
+      seedIdleLimit : (int option [@default None]);
+      seedIdleMode : (int option [@default None]);
+      seedRatioLimit : (float option [@default None]);
+      seedRatioMode : (int option [@default None]);
+      trackerAdd : (string list option [@default None]);
+      trackerRemove : (int list option [@default None]);
+      trackerReplace : ((int*string) list option [@default None]);
+      uploadLimit : (int option [@default None]);
+      uploadLimited : (bool option [@default None])
+    } [@@deriving to_yojson]
   end
 
   module Get = struct
@@ -165,6 +194,7 @@ module Torrent = struct
 
   module Add = struct
     type to_add = [ `Filename of string | `Metainfo of string ]
+
     type arguments = {
       cookies : (string option [@default None]);
       download_dir : (string option [@default None]);

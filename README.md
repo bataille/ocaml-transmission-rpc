@@ -104,7 +104,7 @@ Rpc.Session.stats ~client
 | torrent-start-now    | ✓           |
 | torrent-stop         | ✓           |
 | torrent-verify       | ✓           |
-| torrent-set          |             |
+| torrent-set          | ✓           |
 | torrent-get          | ✓           |
 | torrent-add          | ✓           |
 | torrent-remove       | ✓           |
@@ -125,6 +125,5 @@ Rpc.Session.stats ~client
 ## Todo
 
 * Write code to support the remaining methods:
-  + torrent-set
   + session-set
 * Write proper testing

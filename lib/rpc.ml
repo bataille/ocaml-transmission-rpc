@@ -55,6 +55,59 @@ module Torrent = struct
   let verify = ids_method_no_return "torrent-verify"
   let reannounce = ids_method_no_return "torrent-reannounce"
 
+  let set ~client
+      ?bandwidthPriority:(bandwidthPriority=None)
+      ?downloadLimit:(downloadLimit=None)
+      ?downloadLimited:(downloadLimited=None)
+      ?files_wanted:(files_wanted=None)
+      ?files_unwanted:(files_unwanted=None)
+      ?honorsSessionLimits:(honorsSessionLimits=None)
+      ?location:(location=None)
+      ?peer_limit:(peer_limit=None)
+      ?priority_high:(priority_high=None)
+      ?priority_low:(priority_low=None)
+      ?priority_normal:(priority_normal=None)
+      ?queuePosition:(queuePosition=None)
+      ?seedIdleLimit:(seedIdleLimit=None)
+      ?seedIdleMode:(seedIdleMode=None)
+      ?seedRatioLimit:(seedRatioLimit=None)
+      ?seedRatioMode:(seedRatioMode=None)
+      ?trackerAdd:(trackerAdd=None)
+      ?trackerRemove:(trackerRemove=None)
+      ?trackerReplace:(trackerReplace=None)
+      ?uploadLimit:(uploadLimit=None)
+      ?uploadLimited:(uploadLimited=None)
+      ~ids =
+    let open Request.Torrent.Set in
+    `Assoc [
+      ("method", `String "torrent-get");
+      ("arguments", {
+          bandwidthPriority = bandwidthPriority;
+          downloadLimit = downloadLimit;
+          downloadLimited = downloadLimited;
+          files_wanted = files_wanted;
+          files_unwanted = files_unwanted;
+          honorsSessionLimits = honorsSessionLimits;
+          ids = ids;
+          location = location;
+          peer_limit = peer_limit;
+          priority_high = priority_high;
+          priority_low = priority_low;
+          priority_normal = priority_normal;
+          queuePosition = queuePosition;
+          seedIdleLimit = seedIdleLimit;
+          seedIdleMode = seedIdleMode;
+          seedRatioLimit = seedRatioLimit;
+          seedRatioMode = seedRatioMode;
+          trackerAdd = trackerAdd;
+          trackerRemove = trackerRemove;
+          trackerReplace = trackerReplace;
+          uploadLimit = uploadLimit;
+          uploadLimited = uploadLimited
+        } |> arguments_to_yojson)] 
+    |> Client.post ~client
+    |> no_return
+
   let get ~client ~fields ~ids =
     let open Request.Torrent.Get in
     `Assoc [

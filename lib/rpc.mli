@@ -16,6 +16,30 @@ module Torrent : sig
   val reannounce : client:Client.t -> ids:Request.Torrent.ids -> 
     (unit, string) result  
   
+  val set : client:Client.t ->
+    ?bandwidthPriority:int option ->
+    ?downloadLimit:int option ->
+    ?downloadLimited:bool option ->
+    ?files_wanted:int list option ->
+    ?files_unwanted:int list option ->
+    ?honorsSessionLimits:bool option ->
+    ?location:string option ->
+    ?peer_limit:int option ->
+    ?priority_high:int list option ->
+    ?priority_low:int list option ->
+    ?priority_normal:int list option ->
+    ?queuePosition:int option ->
+    ?seedIdleLimit:int option ->
+    ?seedIdleMode:int option ->
+    ?seedRatioLimit:float option ->
+    ?seedRatioMode:int option ->
+    ?trackerAdd:string list option ->
+    ?trackerRemove:int list option ->
+    ?trackerReplace:(int*string) list option ->
+    ?uploadLimit:int option ->
+    ?uploadLimited:bool option ->
+    ids:Request.Torrent.ids -> (unit, string) result
+
   val get : client:Client.t ->
     fields:Request.Torrent.Get.field_name list -> 
     ids:Request.Torrent.ids -> 
