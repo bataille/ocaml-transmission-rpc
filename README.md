@@ -1,9 +1,14 @@
 # Transmission-rpc
 
 A work-in-progress Transmission rpc client library for Ocaml.
+The implemented spec definition is in the doc folder. 
+See [here](https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt)
+for the last version.
 
-It aims to support all the methods of the Transmission rpc interface and remains voluntarily close to the interface specification. 
-Each call is a function using labelled arguments, optional arguments for optional fields and returns a properly typed structure.
+It aims to support all the methods of the Transmission rpc interface and 
+remains voluntarily close to the interface specification. Each call is a 
+function using labelled arguments, optional arguments for optional fields 
+and returns a properly typed structure.
 
 ## Installation
 
@@ -63,7 +68,8 @@ To each method of the Transmission rpc interface corresponds a function in the
 *Rpc* module. If needed, the types of arguments are defined in the *Request*
 module. These functions return structure defined in the *Result* module.
 
-For example, you can get the name, status and upload ratio of every torrents currently processed using:
+For example, you can get the name, status and upload ratio of every torrents 
+currently processed using:
 ```Ocaml
 Rpc.Torrent.get ~client 
   ~ids:`All 
