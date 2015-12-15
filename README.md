@@ -33,6 +33,12 @@ make install
 
 ## Usage
 
+All the modules in this library are packed under the *Transmission* top module.
+The following examples are written implying that this toplevel module is open:
+```Ocaml
+open Transmission
+```
+
 ### Connection
 
 First create a client using *Client.build* :
@@ -54,34 +60,35 @@ The library takes care of setting the required headers properly.
 ### Request
 
 To each method of the Transmission rpc interface corresponds a function in the
-*Transmission* module. If needed, the types of arguments are defined in the *Request*
+*Rpc* module. If needed, the types of arguments are defined in the *Request*
 module. These functions return structure defined in the *Result* module.
 
 For example, you can get the name, status and upload ratio of every torrents currently processed using:
 ```Ocaml
-Transmission.Torrent.get ~client 
+Rpc.Torrent.get ~client 
   ~ids:`All 
   ~fields:[`Name; `Status; `UploadRatio]
 ```
 
 The estimated remaining time of the recently active torrents:
 ```Ocaml
-Transmission.Torrent.get ~client
+Rpc.Torrent.get ~client
   ~ids:`RecentlyActive
   ~fields:[`Eta]
 ```
 
 To delete the torrents 3 and 5 including their data, you would use:
 ```Ocaml
-Transmission.Torrent.remove ~client 
+Rpc.Torrent.remove ~client 
   ~delete_local_data:true
   ~ids:(`TorrentList [3;5])
 ```
 
 To get statistics on the current session:
 ```Ocaml
-Transmission.Session.stats ~client
+Rpc.Session.stats ~client
 ```
+
 
 ## Support
 

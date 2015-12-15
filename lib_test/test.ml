@@ -3,7 +3,7 @@ let client =
     ~host:"http://127.0.0.1" ()
 
 let () =
-  Transmission.Torrent.get ~client 
+  Rpc.Torrent.get ~client 
     ~fields:[`Id; `Name; `Status; `UploadLimit; `Files; `Status] 
     ~ids:`All
   |> (function `Ok l -> begin
