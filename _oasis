@@ -11,12 +11,13 @@ Library transmission
   Path:         lib
   Pack:         true
   Findlibname:  transmission-rpc
-  Modules:      Rpc, Client, Request, Result
+  Modules:      Rpc, Client, Request, Answer
   BuildDepends:
     lwt,
     cohttp,
     cohttp.lwt,
     yojson,
+    rresult,
     ppx_deriving.show,
     ppx_deriving_yojson
 

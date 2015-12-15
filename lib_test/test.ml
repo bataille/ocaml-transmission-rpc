@@ -1,3 +1,5 @@
+open Rresult
+
 let client =
   Client.build ~user:(Some "user") ~password:(Some "password")
     ~host:"http://127.0.0.1" ()
@@ -6,10 +8,11 @@ let () =
   Rpc.Torrent.get ~client 
     ~fields:[`Id; `Name; `Status; `UploadLimit; `Files; `Status] 
     ~ids:`All
-  |> (function `Ok l -> begin
+  |> (function Ok l -> begin
         l
-        |> List.map (List.map Result.Torrent.Get.show_field)
+        |> List.map (List.map Answer.Torrent.Get.show_field)
         |> List.map (fun s -> "(" ^ String.concat "," s ^ ")")
         |> String.concat "\n"
-    end | `Error e -> e)
+      end 
+      | Error e -> e)
   |> print_endline

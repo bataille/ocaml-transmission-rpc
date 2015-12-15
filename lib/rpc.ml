@@ -1,11 +1,5 @@
 open Yojson
-type 'a result = [ `Ok of 'a | `Error of string ]
-let bind_result r f =
-  match r with
-  |`Ok ok -> f ok
-  |`Error e -> `Error e
-
-let (>>=) = bind_result
+open Rresult
 
 (* Send request and parse results *)
 let no_arg_method method_name =
@@ -26,22 +20,22 @@ let ids_method method_name =
 
 let get_return_arguments returned =
   let f x = 
-    (function ("arguments", json) -> `Ok json
-    |("result", `String "success") -> `Ok x
-    |("result", `String s) -> `Error s
-    |("tag", t) -> `Ok x
-    |_ -> `Error "Invalid return")
+    (function ("arguments", json) -> Ok json
+    |("result", `String "success") -> Ok x
+    |("result", `String s) -> Error s
+    |("tag", t) -> Ok x
+    |_ -> Error "Invalid return")
   in returned
   |> (function `Assoc l -> 
         List.fold_left (fun acc elem -> acc >>= fun acc -> f acc elem) 
-          (`Ok `Null) l
-      |_ -> `Error "Invalid return")
+          (Ok `Null) l
+      |_ -> Error "Invalid return")
 
 let no_return returned =
   match get_return_arguments returned with
-  |`Ok `Null -> `Ok ()
-  |`Ok _ -> assert false
-  |`Error e -> `Error e
+  | Ok `Null -> Ok ()
+  | Ok _ -> assert false
+  | Error e -> Error e
 
 let no_arg_method_no_return method_name =
   let f ~client =
@@ -67,7 +61,7 @@ module Torrent = struct
       ("arguments", {fields=fields; ids=ids} |> arguments_to_yojson)] 
     |> Client.post ~client
     |> get_return_arguments
-    >>= Result.Torrent.Get.parse
+    >>= Answer.Torrent.Get.parse
 
   let remove ~client ?delete_local_data:(dlt=false) ~ids =
     let open Request.Torrent.Remove in
@@ -103,29 +97,29 @@ module Torrent = struct
     ] 
     |> Client.post ~client
     |> get_return_arguments
-    >>= Result.Torrent.RenamePath.of_yojson
+    >>= Answer.Torrent.RenamePath.parse
 end
 
 module Session = struct
   let get ~client = 
     (no_arg_method "session-get") ~client
   |> get_return_arguments
-  >>= Result.Session.Get.of_yojson
+  >>= Answer.Session.Get.parse
   
   let stats ~client = 
     (no_arg_method "session-stats") ~client
     |> get_return_arguments
-    >>= Result.Session.Stats.of_yojson
+    >>= Answer.Session.Stats.parse
 
   let port_test ~client = 
     (no_arg_method "port-test") ~client
       |> get_return_arguments
-      >>= Result.Session.PortChecking.parse
+      >>= Answer.Session.PortChecking.parse
 
   let blocklist_update ~client = 
     (no_arg_method "blocklist-update") ~client
     |> get_return_arguments
-    >>= Result.Session.BlocklistUpdate.parse
+    >>= Answer.Session.BlocklistUpdate.parse
 
   let close = no_arg_method_no_return "session-close"
 
@@ -142,5 +136,5 @@ module Session = struct
         ("arguments", `Assoc [("path", `String path)])
       ] |> Client.post ~client
       |> get_return_arguments
-      >>= Result.Session.FreeSpace.of_yojson
+      >>= Answer.Session.FreeSpace.parse
 end

@@ -17,10 +17,11 @@ To be compiled, this library requires:
 - *lwt*
 - *yojson*
 - *ppx_deriving_yojson*
+- *rresult*
 
 All these libraries can be installed through [opam](https://opam.ocaml.org/):
 ```
-opam install cohttp lwt yojson ppx_deriving_yojson
+opam install cohttp lwt yojson ppx_deriving_yojson rresult
 ```
 
 The project is setup using [oasis](http://oasis.forge.ocamlcore.org/) which
@@ -66,7 +67,7 @@ The library takes care of setting the required headers properly.
 
 To each method of the Transmission rpc interface corresponds a function in the
 *Rpc* module. If needed, the types of arguments are defined in the *Request*
-module. These functions return structure defined in the *Result* module.
+module. These functions return structure defined in the *Answer* module.
 
 For example, you can get the name, status and upload ratio of every torrents 
 currently processed using:
@@ -94,7 +95,6 @@ To get statistics on the current session:
 ```Ocaml
 Rpc.Session.stats ~client
 ```
-
 
 ## Support
 

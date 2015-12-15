@@ -1,19 +1,32 @@
-(* Monadic operations on the upcoming result type *)
-type 'a result = [ `Ok of 'a | `Error of string ] 
+open Rresult 
 
-let bind_result r f =
-  match r with
-  |`Ok a -> f a
-  |`Error e -> `Error e
-
-let (>>=) = bind_result
-
-let result_map f l =
+let result_list_map f l =
   let rec aux_map f l acc =
     match l with
-    |[] -> `Ok (List.rev acc)
+    |[] -> Ok (List.rev acc)
     |x::xs -> f x >>= fun ok -> aux_map f xs (ok::acc)
   in aux_map f l []
+
+module PolyResult = struct
+  (* Yojson use a polymorphic variant for result. *)
+  let result_bind r f =
+    match r with
+    | `Ok ok -> f ok
+    | `Error e -> `Error e
+
+  let (>>=) = result_bind
+
+  let result_list_map f l =
+    let rec aux_map f l acc =
+      match l with
+      |[] -> `Ok (List.rev acc)
+      |x::xs -> f x >>= fun ok -> aux_map f xs (ok::acc)
+    in aux_map f l []
+
+  let to_result = 
+    function `Ok ok -> Ok ok
+    | `Error e -> Error e
+end
 
 (* Parsing json returned by the rpc interface of Transmission *)
 module Torrent = struct
@@ -166,7 +179,8 @@ module Torrent = struct
     | WebseedsSendingToUs of int
     [@@deriving show]
 
-    let tuple_to_field = function 
+    let tuple_to_field = 
+      let open PolyResult in function 
       ("activityDate", `Int i) -> `Ok (ActivityDate i)
     | ("addedDate", `Int i) -> `Ok (AddedDate i)
     | ("bandwithPriority", `Int i) -> `Ok (BandwithPriority i)
@@ -185,7 +199,7 @@ module Torrent = struct
     | ("eta", `Int i) -> `Ok (Eta i)
     | ("etaIdle", `Int i) -> `Ok (EtaIdle i)
     | ("files", `List files) -> 
-        result_map file_of_yojson files >>= fun l -> `Ok (Files l)
+        result_list_map file_of_yojson files >>= fun l -> `Ok (Files l)
     | ("fileStats", json) -> 
         file_stats_of_yojson json >>= fun fs -> `Ok (FileStats fs)
     | ("hashString", `String s) -> `Ok (HashString s)
@@ -204,8 +218,7 @@ module Torrent = struct
     | ("name",`String s) -> `Ok (Name s)
     | ("peer-limit", `Int i) -> `Ok (PeerLimit i)
     | ("peers", `List peers) -> 
-        result_map peer_of_yojson peers
-        >>= fun p -> `Ok (Peers p)
+        result_list_map peer_of_yojson peers >>= fun p -> `Ok (Peers p)
     | ("peersConnected", `Int i) -> `Ok (PeersConnected i)
     | ("peersFrom", json) -> 
         peers_from_of_yojson json >>= fun pf -> `Ok (PeersFrom pf)
@@ -216,7 +229,7 @@ module Torrent = struct
     | ("pieceCount", `Int i) -> `Ok (PieceCount i)
     | ("pieceSize", `Int i) -> `Ok (PieceSize i)
     | ("priorities", `List l) -> 
-        l |> result_map 
+        l |> result_list_map 
           (function `Int i -> `Ok i |_ -> `Error "Invalid priority")
         >>= fun p -> `Ok (Priorities p)
     | ("queuePosition", `Int i) -> `Ok (QueuePosition i)
@@ -233,10 +246,10 @@ module Torrent = struct
     | ("startDate", `Int i) -> `Ok (StartDate i)
     | ("status", `Int i) -> `Ok (Status i)
     | ("trackers", `List trackers) ->
-        result_map tracker_of_yojson trackers 
+        result_list_map tracker_of_yojson trackers 
         >>= fun l -> `Ok (Trackers l)
     | ("trackerStats", `List stats) ->
-        result_map tracker_stat_of_yojson stats 
+        result_list_map tracker_stat_of_yojson stats 
         >>= fun ts -> `Ok (TrackerStats ts)
     | ("totalSize", `Int i) -> `Ok (TotalSize i)
     | ("torrentFile", `String s) -> `Ok (TorrentFile s)
@@ -245,11 +258,11 @@ module Torrent = struct
     | ("uploadLimited", `Bool b) -> `Ok (UploadLimited b)
     | ("uploadRatio", `Float f) -> `Ok (UploadRatio f)
     | ("wanted", `List l) -> 
-        l |> result_map 
+        l |> result_list_map 
           (function `Bool b -> `Ok b |_ -> `Error "Invalid wanted field")
         >>= fun l -> `Ok (Wanted l)
     | ("webseeds", `List l) -> 
-        l |> result_map 
+        l |> result_list_map 
           (function `String s -> `Ok s |_ -> `Error "Invalid webseed")
         >>= fun l -> `Ok (Webseeds l)
     | ("webseedsSendingToUs", `Int i) -> `Ok (WebseedsSendingToUs i)
@@ -257,14 +270,17 @@ module Torrent = struct
 
     type torrent = field list
     let torrent_of_yojson = 
-      function `Assoc l -> result_map tuple_to_field l
+      let open PolyResult in
+      function `Assoc l -> result_list_map tuple_to_field l
       |_ -> `Error "Invalid torrent field" 
     
     type t = {
       torrents: torrent list
     } [@@deriving of_yojson]
 
-    let parse json = of_yojson json >>= fun t -> `Ok t.torrents
+    let parse json =
+      of_yojson json |> PolyResult.to_result
+      >>= fun t -> Ok t.torrents
   end
 
   module RenamePath = struct
@@ -273,6 +289,8 @@ module Torrent = struct
       name : string;
       id : int
     } [@@deriving show, of_yojson]
+
+    let parse json = of_yojson json |> PolyResult.to_result
   end
 end
 
@@ -339,6 +357,8 @@ module Session = struct
       utp_enabled : bool [@key "utp-enabled"];
       version : string
     } [@@deriving show, of_yojson {strict = false}]
+
+    let parse json = of_yojson json |> PolyResult.to_result
   end
   
   module Stats = struct
@@ -367,6 +387,8 @@ module Session = struct
       cumulative_stats : cumulative_stats [@key "cumulative-stats"];
       current_stats : current_stats [@key "current-stats"]
     } [@@deriving show, of_yojson]
+
+    let parse json = of_yojson json |> PolyResult.to_result
   end
   
   module BlocklistUpdate = struct
@@ -374,7 +396,10 @@ module Session = struct
       blocklist_size : int [@key "blocklist-size"]
     } [@@deriving of_yojson]
 
-    let parse json = of_yojson json >>= fun t -> `Ok t.blocklist_size
+    let parse json = 
+      of_yojson json
+      |> PolyResult.to_result
+      >>= fun t -> Ok t.blocklist_size
   end
 
   module PortChecking = struct
@@ -382,7 +407,10 @@ module Session = struct
       port_is_open : bool [@key "port-is-open"]
     } [@@deriving of_yojson]
 
-    let parse json = of_yojson json >>= fun t -> `Ok t.port_is_open
+    let parse json = 
+      of_yojson json
+      |> PolyResult.to_result
+      >>= fun t -> Ok t.port_is_open
   end
   
   module FreeSpace = struct
@@ -390,5 +418,7 @@ module Session = struct
       path : string;
       size_bytes : int [@key "size-bytes"]
     } [@@deriving show, of_yojson]
+
+    let parse json = of_yojson json |> PolyResult.to_result
   end
 end

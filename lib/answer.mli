@@ -1,4 +1,4 @@
-type 'a result = [ `Ok of 'a | `Error of string ] 
+open Rresult
 
 module Torrent : sig
   module Get : sig
@@ -151,7 +151,7 @@ module Torrent : sig
 
     val show_field : field -> string
 
-    val parse : Yojson.Safe.json -> field list list result 
+    val parse : Yojson.Safe.json -> (field list list, string) result 
   end
 
   module RenamePath : sig
@@ -161,7 +161,7 @@ module Torrent : sig
       id : int
     }
     val show : t -> string
-    val of_yojson : Yojson.Safe.json -> t result
+    val parse : Yojson.Safe.json -> (t, string) result
   end
 end
 
@@ -227,7 +227,7 @@ module Session : sig
       version : string
     }
     val show : t -> string
-    val of_yojson : Yojson.Safe.json -> t result
+    val parse : Yojson.Safe.json -> (t, string) result
   end
   
   module Stats : sig
@@ -257,15 +257,15 @@ module Session : sig
       current_stats : current_stats
     }
     val show : t -> string
-    val of_yojson : Yojson.Safe.json -> t result
+    val parse : Yojson.Safe.json -> (t, string) result
   end
 
   module BlocklistUpdate : sig
-    val parse : Yojson.Safe.json -> int result
+    val parse : Yojson.Safe.json -> (int, string) result
   end
 
   module PortChecking : sig
-    val parse : Yojson.Safe.json -> bool result
+    val parse : Yojson.Safe.json -> (bool, string) result
   end
   
   module FreeSpace : sig
@@ -274,6 +274,6 @@ module Session : sig
       size_bytes : int
     }
     val show : t -> string
-    val of_yojson : Yojson.Safe.json -> t result
+    val parse : Yojson.Safe.json -> (t, string) result
   end
 end
