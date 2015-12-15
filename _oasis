@@ -1,0 +1,27 @@
+OASISFormat: 0.4
+Name:        transmission-rpc
+Version:     0.1
+Synopsis:    A library wrapping transmission-rpc
+Authors:     Benoit Bataille
+License:     BSD-3-clause
+Plugins:     META (0.4), StdFiles (0.4), DevFiles (0.4)
+
+Library transmission
+  Install:       false
+  Path:          lib
+  BuildTools:    ocamlbuild
+  Modules: Transmission, Client, Request, Result
+  BuildDepends:
+    lwt,
+    cohttp,
+    cohttp.lwt,
+    yojson,
+    ppx_deriving.show,
+    ppx_deriving_yojson
+
+Executable test
+     Path:          lib_test
+     MainIs:        test.ml
+     BuildTools:    ocamlbuild
+     Install:       false
+     BuildDepends:  transmission
