@@ -119,8 +119,7 @@ Rpc.Session.stats ~client
 ## Todo
 
 * Write code to support the remaining methods:
-+ torrent-set
-+ torrent-add
-+ session-set
-* Write mli for request and result
+  + torrent-set
+  + torrent-add
+  + session-set
 * Write proper testing

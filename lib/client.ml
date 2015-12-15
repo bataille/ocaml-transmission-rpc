@@ -39,21 +39,15 @@ let build ?user:(user=None) ?password:(password=None)
     |_ -> failwith "Failed to get a session id."
   end) |> Lwt_main.run
 
-let send_request client request =
-  print_endline @@ Yojson.Safe.to_string request;
+let send_request ~client request =
   Cohttp_lwt_unix.Client.post 
     ~headers:client.header
     ~body:(`String (request |> Yojson.Safe.to_string)) 
     client.uri 
   >>= fun (resp, body) ->
-    let code = resp |> Response.status |> Code.code_of_status in
-    Printf.printf "Response code: %d\n" code;
-    Printf.printf "Headers: %s\n" 
-      (resp |> Response.headers |> Header.to_string);
-    body |> Cohttp_lwt_body.to_string >|= fun body ->
-      Printf.printf "Body of length: %d\n" (String.length body);
-    body
+    body |> Cohttp_lwt_body.to_string
 
-let post client request =
-  send_request client request
+let post ~client request =
+  send_request ~client request
   |> Lwt_main.run
+  |> Yojson.Safe.from_string

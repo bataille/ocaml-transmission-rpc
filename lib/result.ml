@@ -272,7 +272,7 @@ module Torrent = struct
       path : string;
       name : string;
       id : int
-    } [@@deriving of_yojson]
+    } [@@deriving show, of_yojson]
   end
 end
 
@@ -285,7 +285,7 @@ module Session = struct
       size_bytes : int [@key "size-bytes"];
       memory_units : string list [@key "memory-units"];
       memory_bytes : int [@key "memory-bytes"]
-    } [@@deriving yojson]
+    } [@@deriving show, yojson]
 
     type t = {
       alt_speed_down : int [@key "alt-speed-down"];
@@ -338,7 +338,7 @@ module Session = struct
       units : units ;
       utp_enabled : bool [@key "utp-enabled"];
       version : string
-    } [@@deriving of_yojson {strict = false}]
+    } [@@deriving show, of_yojson {strict = false}]
   end
   
   module Stats = struct
@@ -348,7 +348,7 @@ module Session = struct
       filesAdded : int;
       sessionCount : int;
       secondsActive : int
-    } [@@deriving of_yojson]
+    } [@@deriving show, of_yojson]
     
     type current_stats = {
       uploadedBytes : int;
@@ -356,7 +356,7 @@ module Session = struct
       filesAdded : int;
       sessionCount : int;
       secondsActive : int
-    } [@@deriving of_yojson]
+    } [@@deriving show, of_yojson]
 
     type t = {
       activeTorrentCount : int;
@@ -366,7 +366,7 @@ module Session = struct
       uploadSpeed : int;
       cumulative_stats : cumulative_stats [@key "cumulative-stats"];
       current_stats : current_stats [@key "current-stats"]
-    } [@@deriving of_yojson]
+    } [@@deriving show, of_yojson]
   end
   
   module BlocklistUpdate = struct
@@ -389,6 +389,6 @@ module Session = struct
     type t = {
       path : string;
       size_bytes : int [@key "size-bytes"]
-    } [@@deriving of_yojson]
+    } [@@deriving show, of_yojson]
   end
 end

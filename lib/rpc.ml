@@ -11,7 +11,7 @@ let (>>=) = bind_result
 let no_arg_method method_name =
   let f ~client =
     `Assoc [("method", `String method_name)]
-    |> Client.post client
+    |> Client.post ~client
   in f
 
 let ids_method method_name =
@@ -20,7 +20,7 @@ let ids_method method_name =
     `Assoc [
       ("method", `String method_name);
       ("arguments", {ids=ids} |> arguments_to_yojson)
-    ] |> Client.post client
+    ] |> Client.post ~client
   in f
 
 
@@ -31,7 +31,7 @@ let get_return_arguments returned =
     |("result", `String s) -> `Error s
     |("tag", t) -> `Ok x
     |_ -> `Error "Invalid return")
-  in Yojson.Safe.from_string returned
+  in returned
   |> (function `Assoc l -> 
         List.fold_left (fun acc elem -> acc >>= fun acc -> f acc elem) 
           (`Ok `Null) l
@@ -65,7 +65,7 @@ module Torrent = struct
     `Assoc [
       ("method", `String "torrent-get");
       ("arguments", {fields=fields; ids=ids} |> arguments_to_yojson)] 
-    |> Client.post client
+    |> Client.post ~client
     |> get_return_arguments
     >>= Result.Torrent.Get.parse
 
@@ -77,7 +77,7 @@ module Torrent = struct
         { ids=ids; 
           delete_local_data=dlt } |> arguments_to_yojson)
     ] 
-    |> Client.post client
+    |> Client.post ~client
     |> no_return
 
   let set_location ~client ?move:(move=false) ~ids ~location =
@@ -89,7 +89,7 @@ module Torrent = struct
           ids=ids; 
           move=move } |> arguments_to_yojson)
     ] 
-    |> Client.post client
+    |> Client.post ~client
     |> no_return
 
   let rename_path ~client ~id ~path ~name = 
@@ -101,7 +101,7 @@ module Torrent = struct
           path=path;
           name = name } |> arguments_to_yojson)
     ] 
-    |> Client.post client
+    |> Client.post ~client
     |> get_return_arguments
     >>= Result.Torrent.RenamePath.of_yojson
 end
@@ -140,7 +140,7 @@ module Session = struct
       `Assoc [
         ("method", `String "free-space");
         ("arguments", `Assoc [("path", `String path)])
-      ] |> Client.post client
+      ] |> Client.post ~client
       |> get_return_arguments
       >>= Result.Session.FreeSpace.of_yojson
 end
