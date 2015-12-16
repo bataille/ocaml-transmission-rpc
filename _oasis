@@ -1,11 +1,20 @@
 OASISFormat: 0.4
 Name:        transmission-rpc
-Version:     0.1
+Version:     1.0
 Synopsis:    A library wrapping transmission-rpc
-Authors:     Benoit Bataille
+Authors:     Benoit Bataille <benoit.bataille@gmail.com>
+Maintainers: Benoit Bataille <benoit.bataille@gmail.com>
 License:     BSD-3-clause
-Plugins:     META (0.4), StdFiles (0.4), DevFiles (0.4)
-BuildTools:   ocamlbuild
+
+Description: An OCaml client library for the Transmission Bittorrent client 
+  RPC supporting all the available methods while remaining voluntarily close
+  to the interface specification. To each specified method corresponds a 
+  function which take advantages of some OCaml niceties: labelled arguments,
+  optional arguments for optional parameters and variant types.
+Homepage:    https://github.com/bataille/ocaml-transmission-rpc
+
+Plugins:     META (0.4), DevFiles (0.4)
+BuildTools:  ocamlbuild
 
 Library transmission
   Path:         lib
@@ -20,9 +29,3 @@ Library transmission
     rresult,
     ppx_deriving.show,
     ppx_deriving_yojson
-
-Executable test
-  Path:          lib_test
-  Install:       false
-  MainIs:        test.ml
-  BuildDepends:  transmission-rpc

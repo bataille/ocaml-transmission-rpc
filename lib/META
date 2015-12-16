@@ -1,0 +1,13 @@
+# OASIS_START
+# DO NOT EDIT (digest: e52d90dd865c5840c5abf938c8bcbd94)
+version = "1.0"
+description = "A library wrapping transmission-rpc"
+requires =
+"lwt cohttp cohttp.lwt yojson rresult ppx_deriving.show ppx_deriving_yojson"
+archive(byte) = "transmission.cma"
+archive(byte, plugin) = "transmission.cma"
+archive(native) = "transmission.cmxa"
+archive(native, plugin) = "transmission.cmxs"
+exists_if = "transmission.cma"
+# OASIS_STOP
+

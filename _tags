@@ -1,0 +1,30 @@
+# OASIS_START
+# DO NOT EDIT (digest: 9eaeed9d3e6e36a834ecb1fb5cb3c6a2)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library transmission
+"lib/transmission.cmxs": use_transmission
+"lib/rpc.cmx": for-pack(Transmission)
+"lib/client.cmx": for-pack(Transmission)
+"lib/request.cmx": for-pack(Transmission)
+"lib/answer.cmx": for-pack(Transmission)
+<lib/*.ml{,i,y}>: pkg_cohttp
+<lib/*.ml{,i,y}>: pkg_cohttp.lwt
+<lib/*.ml{,i,y}>: pkg_lwt
+<lib/*.ml{,i,y}>: pkg_ppx_deriving.show
+<lib/*.ml{,i,y}>: pkg_ppx_deriving_yojson
+<lib/*.ml{,i,y}>: pkg_rresult
+<lib/*.ml{,i,y}>: pkg_yojson
+# OASIS_STOP
