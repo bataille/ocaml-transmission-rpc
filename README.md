@@ -1,14 +1,15 @@
 # Transmission-rpc
 
-A work-in-progress Transmission rpc client library for Ocaml.
+An OCaml client library for the Transmission Bittorrent client RPC.
 The implemented spec definition is in the doc folder. 
 See [here](https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt)
 for the last version.
 
-It aims to support all the methods of the Transmission rpc interface and 
-remains voluntarily close to the interface specification. Each call is a 
-function using labelled arguments, optional arguments for optional fields 
-and returns a properly typed structure.
+This library supports all the methods of the Transmission RPC interface while 
+remaining voluntarily close to the interface specification. To each specified
+method corresponds a function. These functions take advantage of some OCaml 
+niceties: labelled arguments, optional arguments for optional parameters and 
+variant types where it makes sense. They return properly typed structure.
 
 ## Installation
 
@@ -96,34 +97,6 @@ To get statistics on the current session:
 Rpc.Session.stats ~client
 ```
 
-## Support
-
-| Method               | Supported   |
-| -------------------- | :---------: |
-| torrent-start        | ✓           |
-| torrent-start-now    | ✓           |
-| torrent-stop         | ✓           |
-| torrent-verify       | ✓           |
-| torrent-set          | ✓           |
-| torrent-get          | ✓           |
-| torrent-add          | ✓           |
-| torrent-remove       | ✓           |
-| torrent-set-location | ✓           |
-| torrent-rename-path  | ✓           |
-| session-set          |             |
-| session-get          | ✓           |
-| session-stats        | ✓           |
-| session-close        | ✓           |
-| blocklist-update     | ✓           |
-| port-test            | ✓           |
-| queue-move-top       | ✓           |
-| queue-move-up        | ✓           |
-| queue-move-down      | ✓           |
-| queue-move-bottom    | ✓           |
-| free-space           | ✓           |
-
 ## Todo
 
-* Write code to support the remaining methods:
-  + session-set
 * Write proper testing

@@ -238,3 +238,101 @@ module Torrent = struct
     } [@@deriving to_yojson]
   end
 end
+
+module Session = struct
+  module Set = struct
+    type units = {
+      speed_units : string list;
+      speed_bytes : int;
+      size_units : string list;
+      size_bytes : int;
+      memory_units : string list;
+      memory_bytes : int
+    } [@@deriving to_yojson]
+
+    type arguments = {
+      alt_speed_down : (int option [@default None])
+        [@key "alt-speed-down"];
+      alt_speed_enabled : (bool option [@default None])
+        [@key "alt-speed-enabled"];
+      alt_speed_time_begin : (int option [@default None])
+        [@key "alt-speed-time-begin"];
+      alt_speed_time_enabled : (bool option [@default None])
+        [@key "alt-speed-time-enabled"];
+      alt_speed_time_end : (int option [@default None])
+        [@key "alt-speed-time-end"];
+      alt_speed_time_day : (int option [@default None])
+        [@key "alt-speed-time-day"];
+      alt_speed_up : (int option [@default None])
+        [@key "alt-speed-up"];
+      blocklist_url : (string option [@default None])
+        [@key "blocklist-url"];
+      blocklist_enabled : (bool option [@default None])
+        [@key "blocklist-enabled"];
+      cache_size_mb : (int option [@default None])
+        [@key "cache-size-mb"];
+      download_dir : (string option [@default None])
+        [@key "download-dir"];
+      download_queue_size : (int option [@default None])
+        [@key "download-queue-size"];
+      download_queue_enabled : (bool option [@default None])
+        [@key "download-queue-enabled"];
+      dht_enabled : (bool option [@default None])
+        [@key "dht-enabled"];
+      encryption : (string option [@default None]);
+      idle_seeding_limit : (int option [@default None])
+        [@key "idle-seeding-limit"];
+      idle_seeding_limit_enabled : (bool option [@default None])
+        [@key "idle-seeding-limit-enabled"];
+      incomplete_dir : (string option [@default None])
+        [@key "incomplete-dir"];
+      incomplete_dir_enabled : (bool option [@default None])
+        [@key "incomplete-dir-enabled"];
+      lpd_enabled : (bool option [@default None])
+        [@key "lpd-enabled"];
+      peer_limit_global : (int option [@default None])
+        [@key "peer-limit-global"];
+      peer_limit_per_torrent : (int option [@default None])
+        [@key "peer-limit-per-torrent"];
+      pex_enabled : (bool option [@default None])
+        [@key "pex-enabled"];
+      peer_port : (int option [@default None])
+        [@key "peer-port"];
+      peer_port_random_on_start : (bool option [@default None])
+        [@key "peer-port-random-on-start"];
+      port_forwarding_enabled : (bool option [@default None])
+        [@key "port-forwarding-enabled"];
+      queue_stalled_enabled : (bool option [@default None])
+        [@key "queue-stalled-enabled"];
+      queue_stalled_minutes : (int option [@default None])
+        [@key "queue-stalled-minutes"];
+      rename_partial_files : (bool option [@default None])
+        [@key "rename-partial-files"];
+      script_torrent_done_filename : (string option [@default None])
+        [@key "script-torrent-done-filename"];
+      script_torrent_done_enabled : (bool option [@default None])
+        [@key "script-torrent-done-enabled"];
+      seedRatioLimit : (float option [@default None]);
+      seedRatioLimited : (bool option [@default None]);
+      seed_queue_size : (int option [@default None])
+        [@key "seed-queue-size"];
+      seed_queue_enabled : (bool option [@default None])
+        [@key "seed-queue-enabled"];
+      speed_limit_down : (int option [@default None])
+        [@key "speed-limit-down"];
+      speed_limit_down_enabled : (bool option [@default None])
+        [@key "speed-limit-down-enabled"];
+      speed_limit_up : (int option [@default None])
+        [@key "speed-limit-up"];
+      speed_limit_up_enabled : (bool option [@default None])
+        [@key "speed-limit-up-enabled"];
+      start_added_torrents : (bool option [@default None])
+        [@key "start-added-torrents"];
+      trash_original_torrent_files : (bool option [@default None])
+        [@key "trash-original-torrent-files"];
+      units : (units option [@default None]);
+      utp_enabled : (bool option [@default None])
+        [@key "utp-enabled"]
+    } [@@deriving to_yojson {strict = false}]
+  end
+end

@@ -190,6 +190,103 @@ module Torrent = struct
 end
 
 module Session = struct
+  let set ~client
+      ?alt_speed_down:(alt_speed_down=None)
+      ?alt_speed_enabled:(alt_speed_enabled=None)
+      ?alt_speed_time_begin:(alt_speed_time_begin=None)
+      ?alt_speed_time_enabled:(alt_speed_time_enabled=None)
+      ?alt_speed_time_end:(alt_speed_time_end=None)
+      ?alt_speed_time_day:(alt_speed_time_day=None)
+      ?alt_speed_up:(alt_speed_up=None)
+      ?blocklist_url:(blocklist_url=None)
+      ?blocklist_enabled:(blocklist_enabled=None)
+      ?cache_size_mb:(cache_size_mb=None)
+      ?download_dir:(download_dir=None)
+      ?download_queue_size:(download_queue_size=None)
+      ?download_queue_enabled:(download_queue_enabled=None)
+      ?dht_enabled:(dht_enabled=None)
+      ?encryption:(encryption=None)
+      ?idle_seeding_limit:(idle_seeding_limit=None)
+      ?idle_seeding_limit_enabled:(idle_seeding_limit_enabled=None)
+      ?incomplete_dir:(incomplete_dir=None)
+      ?incomplete_dir_enabled:(incomplete_dir_enabled=None)
+      ?lpd_enabled:(lpd_enabled=None)
+      ?peer_limit_global:(peer_limit_global=None)
+      ?peer_limit_per_torrent:(peer_limit_per_torrent=None)
+      ?pex_enabled:(pex_enabled=None)
+      ?peer_port:(peer_port=None)
+      ?peer_port_random_on_start:(peer_port_random_on_start=None)
+      ?port_forwarding_enabled:(port_forwarding_enabled=None)
+      ?queue_stalled_enabled:(queue_stalled_enabled=None)
+      ?queue_stalled_minutes:(queue_stalled_minutes=None)
+      ?rename_partial_files:(rename_partial_files=None)
+      ?script_torrent_done_filename:(script_torrent_done_filename=None)
+      ?script_torrent_done_enabled:(script_torrent_done_enabled=None)
+      ?seedRatioLimit:(seedRatioLimit=None)
+      ?seedRatioLimited:(seedRatioLimited=None)
+      ?seed_queue_size:(seed_queue_size=None)
+      ?seed_queue_enabled:(seed_queue_enabled=None)
+      ?speed_limit_down:(speed_limit_down=None)
+      ?speed_limit_down_enabled:(speed_limit_down_enabled=None)
+      ?speed_limit_up:(speed_limit_up=None)
+      ?speed_limit_up_enabled:(speed_limit_up_enabled=None)
+      ?start_added_torrents:(start_added_torrents=None)
+      ?trash_original_torrent_files:(trash_original_torrent_files=None)
+      ?units:(units=None)
+      ?utp_enabled:(utp_enabled=None)
+      () =
+    let open Request.Session.Set in
+    `Assoc [
+      ("method", `String "session-set");
+      ("arguments", { 
+          alt_speed_down = alt_speed_down;
+          alt_speed_enabled = alt_speed_enabled;
+          alt_speed_time_begin = alt_speed_time_begin;
+          alt_speed_time_enabled = alt_speed_time_enabled;
+          alt_speed_time_end = alt_speed_time_end;
+          alt_speed_time_day = alt_speed_time_day;
+          alt_speed_up = alt_speed_up;
+          blocklist_url = blocklist_url;
+          blocklist_enabled = blocklist_enabled;
+          cache_size_mb = cache_size_mb;
+          download_dir = download_dir;
+          download_queue_size = download_queue_size;
+          download_queue_enabled = download_queue_enabled;
+          dht_enabled = dht_enabled;
+          encryption = encryption;
+          idle_seeding_limit = idle_seeding_limit;
+          idle_seeding_limit_enabled = idle_seeding_limit_enabled;
+          incomplete_dir = incomplete_dir;
+          incomplete_dir_enabled = incomplete_dir_enabled;
+          lpd_enabled = lpd_enabled;
+          peer_limit_global = peer_limit_global;
+          peer_limit_per_torrent = peer_limit_per_torrent;
+          pex_enabled = pex_enabled;
+          peer_port = peer_port;
+          peer_port_random_on_start = peer_port_random_on_start;
+          port_forwarding_enabled = port_forwarding_enabled;
+          queue_stalled_enabled = queue_stalled_enabled;
+          queue_stalled_minutes = queue_stalled_minutes;
+          rename_partial_files = rename_partial_files;
+          script_torrent_done_filename = script_torrent_done_filename;
+          script_torrent_done_enabled = script_torrent_done_enabled;
+          seedRatioLimit = seedRatioLimit;
+          seedRatioLimited = seedRatioLimited;
+          seed_queue_size = seed_queue_size;
+          seed_queue_enabled = seed_queue_enabled;
+          speed_limit_down = speed_limit_down;
+          speed_limit_down_enabled = speed_limit_down_enabled;
+          speed_limit_up = speed_limit_up;
+          speed_limit_up_enabled = speed_limit_up_enabled;
+          start_added_torrents = start_added_torrents;
+          trash_original_torrent_files = trash_original_torrent_files;
+          units = units;
+          utp_enabled = utp_enabled
+        } |> arguments_to_yojson)
+    ] 
+    |> Client.post ~client
+    |> no_return
+
   let get ~client = 
     (no_arg_method "session-get") ~client
   |> get_return_arguments
