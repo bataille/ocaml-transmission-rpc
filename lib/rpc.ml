@@ -77,7 +77,7 @@ module Torrent = struct
       ?trackerReplace:(trackerReplace=None)
       ?uploadLimit:(uploadLimit=None)
       ?uploadLimited:(uploadLimited=None)
-      ~ids =
+      ~ids () =
     let open Request.Torrent.Set in
     `Assoc [
       ("method", `String "torrent-get");
@@ -152,7 +152,7 @@ module Torrent = struct
     |> get_return_arguments
     >>= Answer.Torrent.Add.parse
 
-  let remove ~client ?delete_local_data:(dlt=false) ~ids =
+  let remove ~client ?delete_local_data:(dlt=false) ~ids () =
     let open Request.Torrent.Remove in
     `Assoc [
       ("method", `String "torrent-remove");
@@ -163,7 +163,7 @@ module Torrent = struct
     |> Client.post ~client
     |> no_return
 
-  let set_location ~client ?move:(move=false) ~ids ~location =
+  let set_location ~client ?move:(move=false) ~ids ~location () =
     let open Request.Torrent.SetLocation in
     `Assoc [
       ("method", `String "torrent-set-location");

@@ -38,7 +38,8 @@ module Torrent : sig
     ?trackerReplace:(int*string) list option ->
     ?uploadLimit:int option ->
     ?uploadLimited:bool option ->
-    ids:Request.Torrent.ids -> (unit, string) result
+    ids:Request.Torrent.ids -> 
+    unit -> (unit, string) result
 
   val get : client:Client.t ->
     fields:Request.Torrent.Get.field_name list -> 
@@ -60,13 +61,13 @@ module Torrent : sig
 
   val remove : client:Client.t -> 
     ?delete_local_data:bool ->
-    ids:Request.Torrent.ids -> (unit, string) result
+    ids:Request.Torrent.ids -> unit -> (unit, string) result
   
   val set_location : client:Client.t ->
     ?move:bool ->
     ids:Request.Torrent.ids ->
-    location:string ->
-    (unit, string) result
+    location:string -> 
+    unit -> (unit, string) result
 
   val rename_path : client:Client.t -> 
     id:int -> 
