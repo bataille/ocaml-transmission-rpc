@@ -1,7 +1,7 @@
 # OASIS_START
-# DO NOT EDIT (digest: e52d90dd865c5840c5abf938c8bcbd94)
+# DO NOT EDIT (digest: f3137592a39d42ce533e8fec1afa83ec)
 version = "1.0"
-description = "A library wrapping transmission-rpc"
+description = "A client library for the Transmission Bittorrent client RPC"
 requires =
 "lwt cohttp cohttp.lwt yojson rresult ppx_deriving.show ppx_deriving_yojson"
 archive(byte) = "transmission.cma"
