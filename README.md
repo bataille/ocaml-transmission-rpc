@@ -13,6 +13,16 @@ variant types where it makes sense. They return properly typed structure.
 
 ## Installation
 
+### Opam
+
+The easiest way to install this library is through 
+[opam](https://opam.ocaml.org/), a package manager for OCaml:
+```sh
+opam install transmission-rpc
+```
+
+### Compiling
+
 To be compiled, this library requires:
 - *cohttp*
 - *lwt*
@@ -21,7 +31,7 @@ To be compiled, this library requires:
 - *rresult*
 
 All these libraries can be installed through [opam](https://opam.ocaml.org/):
-```
+```sh
 opam install cohttp lwt yojson ppx_deriving_yojson rresult
 ```
 
@@ -29,14 +39,16 @@ The project is setup using [oasis](http://oasis.forge.ocamlcore.org/) which
 generates a usabe Makefile. 
 
 To compile, run :
-```
+```sh
 make
 ```
 
 To install:
-```
+```sh
 make install
 ```
+
+This installs a findlib package named *transmission-rpc*.
 
 ## Usage
 
