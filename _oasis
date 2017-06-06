@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        transmission-rpc
-Version:     1.0
+Version:     1.1
 Synopsis:    A client library for the Transmission Bittorrent client RPC
 Authors:     Benoit Bataille <benoit.bataille@gmail.com>
 Maintainers: Benoit Bataille <benoit.bataille@gmail.com>
@@ -26,6 +26,5 @@ Library transmission
     cohttp,
     cohttp.lwt,
     yojson,
-    rresult,
     ppx_deriving.show,
     ppx_deriving_yojson

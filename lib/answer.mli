@@ -27,8 +27,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }}}*)
 
-open Rresult
-
 module Torrent : sig
   module Get : sig
     type file = {
@@ -180,7 +178,7 @@ module Torrent : sig
 
     val show_field : field -> string
 
-    val parse : Yojson.Safe.json -> (field list list, string) result 
+    val parse : Yojson.Safe.json -> field list list Ppx_deriving_yojson_runtime.error_or
   end
 
   module Add : sig
@@ -192,7 +190,7 @@ module Torrent : sig
 
     type t = TorrentAdded of info | TorrentDuplicate of info
 
-    val parse : Yojson.Safe.json -> (t, string) result
+    val parse : Yojson.Safe.json -> t Ppx_deriving_yojson_runtime.error_or
   end
 
   module RenamePath : sig
@@ -202,7 +200,7 @@ module Torrent : sig
       id : int
     }
     val show : t -> string
-    val parse : Yojson.Safe.json -> (t, string) result
+    val parse : Yojson.Safe.json -> t Ppx_deriving_yojson_runtime.error_or
   end
 end
 
@@ -268,7 +266,7 @@ module Session : sig
       version : string
     }
     val show : t -> string
-    val parse : Yojson.Safe.json -> (t, string) result
+    val parse : Yojson.Safe.json -> t Ppx_deriving_yojson_runtime.error_or
   end
   
   module Stats : sig
@@ -298,15 +296,15 @@ module Session : sig
       current_stats : current_stats
     }
     val show : t -> string
-    val parse : Yojson.Safe.json -> (t, string) result
+    val parse : Yojson.Safe.json -> t Ppx_deriving_yojson_runtime.error_or
   end
 
   module BlocklistUpdate : sig
-    val parse : Yojson.Safe.json -> (int, string) result
+    val parse : Yojson.Safe.json -> int Ppx_deriving_yojson_runtime.error_or
   end
 
   module PortChecking : sig
-    val parse : Yojson.Safe.json -> (bool, string) result
+    val parse : Yojson.Safe.json -> bool Ppx_deriving_yojson_runtime.error_or
   end
   
   module FreeSpace : sig
@@ -315,6 +313,6 @@ module Session : sig
       size_bytes : int
     }
     val show : t -> string
-    val parse : Yojson.Safe.json -> (t, string) result
+    val parse : Yojson.Safe.json -> t Ppx_deriving_yojson_runtime.error_or
   end
 end

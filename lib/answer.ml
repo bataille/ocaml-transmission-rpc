@@ -27,35 +27,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }}}*)
 
-open Rresult 
-
-let result_list_map f l =
-  let rec aux_map f l acc =
-    match l with
-    |[] -> Ok (List.rev acc)
-    |x::xs -> f x >>= fun ok -> aux_map f xs (ok::acc)
-  in aux_map f l []
-
-module PolyResult = struct
-  (* Yojson use a polymorphic variant for result. *)
-  let result_bind r f =
-    match r with
-    | `Ok ok -> f ok
-    | `Error e -> `Error e
-
-  let (>>=) = result_bind
-
-  let result_list_map f l =
-    let rec aux_map f l acc =
-      match l with
-      |[] -> `Ok (List.rev acc)
-      |x::xs -> f x >>= fun ok -> aux_map f xs (ok::acc)
-    in aux_map f l []
-
-  let to_result = 
-    function `Ok ok -> Ok ok
-    | `Error e -> Error e
-end
+open Ppx_deriving_yojson_runtime 
+open Result
 
 (* Parsing json returned by the rpc interface of Transmission *)
 module Torrent = struct
@@ -208,108 +181,103 @@ module Torrent = struct
     | WebseedsSendingToUs of int
     [@@deriving show]
 
-    let tuple_to_field = 
-      let open PolyResult in function 
-      ("activityDate", `Int i) -> `Ok (ActivityDate i)
-    | ("addedDate", `Int i) -> `Ok (AddedDate i)
-    | ("bandwithPriority", `Int i) -> `Ok (BandwithPriority i)
-    | ("comment", `String s) -> `Ok (Comment s)
-    | ("corruptEver", `Int i) -> `Ok (CorruptEver i)
-    | ("creator", `String s) -> `Ok (Creator s)
-    | ("dateCreated", `Int i) -> `Ok (DateCreated i)
-    | ("desiredAvailable", `Int i) -> `Ok (DesiredAvailable i)
-    | ("doneDate", `Int i) -> `Ok (DoneDate i)
-    | ("downloadDir", `String s) -> `Ok (DownloadDir s)
-    | ("downloadedEver", `Int i) -> `Ok (DownloadedEver i)
-    | ("downloadLimit", `Int i) -> `Ok (DownloadLimit i)
-    | ("downloadLimited", `Bool b) -> `Ok (DownloadLimited b)
-    | ("error", `Int i) -> `Ok (Error i)
-    | ("errorString", `String s) -> `Ok (ErrorString s)
-    | ("eta", `Int i) -> `Ok (Eta i)
-    | ("etaIdle", `Int i) -> `Ok (EtaIdle i)
+    let tuple_to_field =  function
+      ("activityDate", `Int i) -> Ok (ActivityDate i)
+    | ("addedDate", `Int i) -> Ok (AddedDate i)
+    | ("bandwithPriority", `Int i) -> Ok (BandwithPriority i)
+    | ("comment", `String s) -> Ok (Comment s)
+    | ("corruptEver", `Int i) -> Ok (CorruptEver i)
+    | ("creator", `String s) -> Ok (Creator s)
+    | ("dateCreated", `Int i) -> Ok (DateCreated i)
+    | ("desiredAvailable", `Int i) -> Ok (DesiredAvailable i)
+    | ("doneDate", `Int i) -> Ok (DoneDate i)
+    | ("downloadDir", `String s) -> Ok (DownloadDir s)
+    | ("downloadedEver", `Int i) -> Ok (DownloadedEver i)
+    | ("downloadLimit", `Int i) -> Ok (DownloadLimit i)
+    | ("downloadLimited", `Bool b) -> Ok (DownloadLimited b)
+    | ("error", `Int i) -> Ok (Error i)
+    | ("errorString", `String s) -> Ok (ErrorString s)
+    | ("eta", `Int i) -> Ok (Eta i)
+    | ("etaIdle", `Int i) -> Ok (EtaIdle i)
     | ("files", `List files) -> 
-        result_list_map file_of_yojson files >>= fun l -> `Ok (Files l)
+        map_bind file_of_yojson [] files >>= fun files -> Ok (Files files)
     | ("fileStats", json) -> 
-        file_stats_of_yojson json >>= fun fs -> `Ok (FileStats fs)
-    | ("hashString", `String s) -> `Ok (HashString s)
-    | ("haveUnchecked", `Int i) -> `Ok (HaveUnchecked i)
-    | ("haveValid", `Int i) -> `Ok (HaveValid i)
-    | ("honorsSessionLimits", `Bool b) -> `Ok (HonorsSessionLimits b)
-    | ("id", `Int i) -> `Ok (Id i)
-    | ("isFinished", `Bool b) -> `Ok (IsFinished b)
-    | ("isPrivate", `Bool b) -> `Ok (IsPrivate b)
-    | ("isStalled", `Bool b) -> `Ok (IsStalled b)
-    | ("leftUntilDone", `Int i) -> `Ok (LeftUntilDone i)
-    | ("magnetLink", `String s) -> `Ok (MagnetLink s)
-    | ("manualAnnounceTime", `Int i) -> `Ok (ManualAnnounceTime i)
-    | ("maxConnectedPeers", `Int i) -> `Ok (MaxConnectedPeers i)
-    | ("metadataPercentComplete", `Float f) -> `Ok (MetadataPercentComplete f)
-    | ("name",`String s) -> `Ok (Name s)
-    | ("peer-limit", `Int i) -> `Ok (PeerLimit i)
+        file_stats_of_yojson json >>= fun fileStats -> Ok (FileStats fileStats)
+    | ("hashString", `String s) -> Ok (HashString s)
+    | ("haveUnchecked", `Int i) -> Ok (HaveUnchecked i)
+    | ("haveValid", `Int i) -> Ok (HaveValid i)
+    | ("honorsSessionLimits", `Bool b) -> Ok (HonorsSessionLimits b)
+    | ("id", `Int i) -> Ok (Id i)
+    | ("isFinished", `Bool b) -> Ok (IsFinished b)
+    | ("isPrivate", `Bool b) -> Ok (IsPrivate b)
+    | ("isStalled", `Bool b) -> Ok (IsStalled b)
+    | ("leftUntilDone", `Int i) -> Ok (LeftUntilDone i)
+    | ("magnetLink", `String s) -> Ok (MagnetLink s)
+    | ("manualAnnounceTime", `Int i) -> Ok (ManualAnnounceTime i)
+    | ("maxConnectedPeers", `Int i) -> Ok (MaxConnectedPeers i)
+    | ("metadataPercentComplete", `Float f) -> Ok (MetadataPercentComplete f)
+    | ("name",`String s) -> Ok (Name s)
+    | ("peer-limit", `Int i) -> Ok (PeerLimit i)
     | ("peers", `List peers) -> 
-        result_list_map peer_of_yojson peers >>= fun p -> `Ok (Peers p)
-    | ("peersConnected", `Int i) -> `Ok (PeersConnected i)
+        map_bind peer_of_yojson [] peers >>= fun peers -> Ok (Peers peers)
+    | ("peersConnected", `Int i) -> Ok (PeersConnected i)
     | ("peersFrom", json) -> 
-        peers_from_of_yojson json >>= fun pf -> `Ok (PeersFrom pf)
-    | ("peersGettingFromUs", `Int i) -> `Ok (PeersGettingFromUs i)
-    | ("peersSendingToUs", `Int i) -> `Ok (PeersSendingToUs i)
-    | ("percentDone", `Float f) -> `Ok (PercentDone f)
-    | ("pieces", `String s) -> `Ok (Pieces s)
-    | ("pieceCount", `Int i) -> `Ok (PieceCount i)
-    | ("pieceSize", `Int i) -> `Ok (PieceSize i)
+        peers_from_of_yojson json >>= fun peersFrom -> Ok (PeersFrom peersFrom)
+    | ("peersGettingFromUs", `Int i) -> Ok (PeersGettingFromUs i)
+    | ("peersSendingToUs", `Int i) -> Ok (PeersSendingToUs i)
+    | ("percentDone", `Float f) -> Ok (PercentDone f)
+    | ("pieces", `String s) -> Ok (Pieces s)
+    | ("pieceCount", `Int i) -> Ok (PieceCount i)
+    | ("pieceSize", `Int i) -> Ok (PieceSize i)
     | ("priorities", `List l) -> 
-        l |> result_list_map 
-          (function `Int i -> `Ok i |_ -> `Error "Invalid priority")
-        >>= fun p -> `Ok (Priorities p)
-    | ("queuePosition", `Int i) -> `Ok (QueuePosition i)
-    | ("rateDownload", `Int i) -> `Ok (RateDownload i)
-    | ("rateUpload", `Int i) -> `Ok (RateUpload i)
-    | ("recheckProgress", `Float f) -> `Ok (RecheckProgress f)
-    | ("secondsDownloading", `Int i) -> `Ok (SecondsDownloading i)
-    | ("secondsSeeding", `Int i) -> `Ok (SecondsSeeding i)
-    | ("seedIdleLimit", `Int i) -> `Ok (SeedIdleLimit i)
-    | ("seedIdleMode", `Int i) -> `Ok (SeedIdleMode i)
-    | ("seedRatioLimit", `Float f) -> `Ok (SeedRatioLimit f)
-    | ("seedRatioMode", `Int i) -> `Ok (SeedRatioMode i)
-    | ("sizeWhenDone", `Int i) -> `Ok (SizeWhenDone i)
-    | ("startDate", `Int i) -> `Ok (StartDate i)
-    | ("status", `Int i) -> `Ok (Status i)
+        map_bind (function `Int i -> Ok i |_ -> Error "Invalid priority") [] l
+        >>= fun p -> Ok (Priorities p)
+    | ("queuePosition", `Int i) -> Ok (QueuePosition i)
+    | ("rateDownload", `Int i) -> Ok (RateDownload i)
+    | ("rateUpload", `Int i) -> Ok (RateUpload i)
+    | ("recheckProgress", `Float f) -> Ok (RecheckProgress f)
+    | ("secondsDownloading", `Int i) -> Ok (SecondsDownloading i)
+    | ("secondsSeeding", `Int i) -> Ok (SecondsSeeding i)
+    | ("seedIdleLimit", `Int i) -> Ok (SeedIdleLimit i)
+    | ("seedIdleMode", `Int i) -> Ok (SeedIdleMode i)
+    | ("seedRatioLimit", `Float f) -> Ok (SeedRatioLimit f)
+    | ("seedRatioMode", `Int i) -> Ok (SeedRatioMode i)
+    | ("sizeWhenDone", `Int i) -> Ok (SizeWhenDone i)
+    | ("startDate", `Int i) -> Ok (StartDate i)
+    | ("status", `Int i) -> Ok (Status i)
     | ("trackers", `List trackers) ->
-        result_list_map tracker_of_yojson trackers 
-        >>= fun l -> `Ok (Trackers l)
+        map_bind tracker_of_yojson [] trackers >>= fun l -> Ok (Trackers l)
     | ("trackerStats", `List stats) ->
-        result_list_map tracker_stat_of_yojson stats 
-        >>= fun ts -> `Ok (TrackerStats ts)
-    | ("totalSize", `Int i) -> `Ok (TotalSize i)
-    | ("torrentFile", `String s) -> `Ok (TorrentFile s)
-    | ("uploadedEver", `Int i) -> `Ok (UploadedEver i)
-    | ("uploadLimit", `Int i) -> `Ok (UploadLimit i)
-    | ("uploadLimited", `Bool b) -> `Ok (UploadLimited b)
-    | ("uploadRatio", `Float f) -> `Ok (UploadRatio f)
+        map_bind tracker_stat_of_yojson [] stats 
+        >>= fun ts -> Ok (TrackerStats ts)
+    | ("totalSize", `Int i) -> Ok (TotalSize i)
+    | ("torrentFile", `String s) -> Ok (TorrentFile s)
+    | ("uploadedEver", `Int i) -> Ok (UploadedEver i)
+    | ("uploadLimit", `Int i) -> Ok (UploadLimit i)
+    | ("uploadLimited", `Bool b) -> Ok (UploadLimited b)
+    | ("uploadRatio", `Float f) -> Ok (UploadRatio f)
     | ("wanted", `List l) -> 
-        l |> result_list_map 
-          (function `Bool b -> `Ok b |_ -> `Error "Invalid wanted field")
-        >>= fun l -> `Ok (Wanted l)
+        map_bind 
+          (function `Bool b -> Ok b |_ -> Error "Invalid wanted field") [] l
+        >>= fun l -> Ok (Wanted l)
     | ("webseeds", `List l) -> 
-        l |> result_list_map 
-          (function `String s -> `Ok s |_ -> `Error "Invalid webseed")
-        >>= fun l -> `Ok (Webseeds l)
-    | ("webseedsSendingToUs", `Int i) -> `Ok (WebseedsSendingToUs i)
-    | (s,_) -> `Error ("Unsupported field: " ^ s)
+        map_bind
+         (function `String s -> Ok s |_ -> Error "Invalid webseed") [] l
+        >>= fun l -> Ok (Webseeds l)
+    | ("webseedsSendingToUs", `Int i) -> Ok (WebseedsSendingToUs i)
+    | (s,_) -> Error ("Unsupported field: " ^ s)
 
     type torrent = field list
     let torrent_of_yojson = 
-      let open PolyResult in
-      function `Assoc l -> result_list_map tuple_to_field l
-      |_ -> `Error "Invalid torrent field" 
+      function `Assoc l -> map_bind tuple_to_field [] l
+      |_ -> Error "Invalid torrent field" 
     
     type t = {
       torrents: torrent list
     } [@@deriving of_yojson]
 
     let parse json =
-      of_yojson json |> PolyResult.to_result
-      >>= fun t -> Ok t.torrents
+      of_yojson json >>= fun t -> Ok t.torrents
   end
 
   module Add = struct
@@ -329,7 +297,7 @@ module Torrent = struct
 
     let parse json =
       let get_option = function Some t -> t |_ -> assert false in
-      return_of_yojson json |> PolyResult.to_result
+      return_of_yojson json
       >>= fun t -> 
         if t.torrent_added = None then 
           Ok (TorrentDuplicate (get_option t.torrent_duplicate))
@@ -344,7 +312,7 @@ module Torrent = struct
       id : int
     } [@@deriving show, of_yojson]
 
-    let parse json = of_yojson json |> PolyResult.to_result
+    let parse json = of_yojson json
   end
 end
 
@@ -412,7 +380,7 @@ module Session = struct
       version : string
     } [@@deriving show, of_yojson {strict = false}]
 
-    let parse json = of_yojson json |> PolyResult.to_result
+    let parse json = of_yojson json
   end
   
   module Stats = struct
@@ -442,7 +410,7 @@ module Session = struct
       current_stats : current_stats [@key "current-stats"]
     } [@@deriving show, of_yojson]
 
-    let parse json = of_yojson json |> PolyResult.to_result
+    let parse json = of_yojson json
   end
   
   module BlocklistUpdate = struct
@@ -451,9 +419,7 @@ module Session = struct
     } [@@deriving of_yojson]
 
     let parse json = 
-      of_yojson json
-      |> PolyResult.to_result
-      >>= fun t -> Ok t.blocklist_size
+      of_yojson json >>= fun t -> Ok t.blocklist_size
   end
 
   module PortChecking = struct
@@ -461,10 +427,8 @@ module Session = struct
       port_is_open : bool [@key "port-is-open"]
     } [@@deriving of_yojson]
 
-    let parse json = 
-      of_yojson json
-      |> PolyResult.to_result
-      >>= fun t -> Ok t.port_is_open
+    let parse json =
+      of_yojson json >>= fun t -> Ok t.port_is_open
   end
   
   module FreeSpace = struct
@@ -473,6 +437,6 @@ module Session = struct
       size_bytes : int [@key "size-bytes"]
     } [@@deriving show, of_yojson]
 
-    let parse json = of_yojson json |> PolyResult.to_result
+    let parse json = of_yojson json 
   end
 end

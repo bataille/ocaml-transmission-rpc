@@ -28,7 +28,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }}}*)
 
 open Yojson
-open Rresult
+open Ppx_deriving_yojson_runtime
+open Result
 
 (* Send request and parse results *)
 let no_arg_method method_name =

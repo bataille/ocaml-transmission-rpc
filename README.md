@@ -28,7 +28,6 @@ To be compiled, this library requires:
 - *lwt*
 - *yojson*
 - *ppx_deriving_yojson*
-- *rresult*
 
 All these libraries can be installed through [opam](https://opam.ocaml.org/):
 ```sh

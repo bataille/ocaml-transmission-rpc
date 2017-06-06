@@ -27,7 +27,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }}}*)
 
-open Rresult
+open Result
 
 module Torrent : sig
   val start : client:Client.t -> ids:Request.Torrent.ids ->
