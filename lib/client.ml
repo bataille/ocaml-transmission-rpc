@@ -74,7 +74,7 @@ let send_request ~client request =
     ~body:(`String (request |> Yojson.Safe.to_string)) 
     client.uri 
   >>= fun (resp, body) ->
-    body |> Cohttp_lwt_body.to_string
+    body |> Cohttp_lwt__Body.to_string
 
 let post ~client request =
   send_request ~client request
