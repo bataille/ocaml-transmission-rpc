@@ -1,0 +1,27 @@
+opam-version: "1.2"
+maintainer: "benoit.bataille@bbataille.fr"
+authors: [
+  "Benoit Bataille"
+]
+homepage: "https://github.com/bataille/ocaml-transmission-rpc"
+bug-reports: "https://github.com/mirage/ocaml-transmission-rpc/issues"
+license: "ISC"
+dev-repo: "https://github.com/bataille/ocaml-transmission-rpc.git"
+build: [
+  ["jbuilder" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "jbuilder" {build & >= "1.0+beta10"}
+  "lwt"
+  "cohttp"
+  "cohttp.lwt"
+  "yojson"
+  "ppx_deriving.show"
+  "ppx_deriving_yojson"
+]
+available: [ ocaml-version >= "4.03.0" ]
+descr: "
+An OCaml client library for the Transmission Bittorrent client 
+RPC supporting all the available methods while remaining voluntarily close
+to the interface specification.
+"

@@ -8,13 +8,6 @@
 *.cmxs
 *.cmxa
 
-# ocamlbuild working directory
 _build/
-
-# ocamlbuild targets
-*.byte
-*.native
-
-# oasis generated files
-setup.data
-setup.log
+.merlin
+_opam/

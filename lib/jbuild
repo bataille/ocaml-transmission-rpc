@@ -1,0 +1,8 @@
+(jbuild_version 1)
+
+(library
+ ((name        transmission)
+  (public_name transmission)
+  (libraries (lwt cohttp cohttp.lwt yojson ppx_deriving_yojson.runtime))
+  (preprocess (pps (ppx_deriving.show ppx_deriving_yojson)))
+))

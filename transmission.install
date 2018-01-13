@@ -1,0 +1,36 @@
+lib: [
+  "_build/install/default/lib/transmission/META" {"META"}
+  "_build/install/default/lib/transmission/opam" {"opam"}
+  "_build/install/default/lib/transmission/transmission__Answer.cmi"
+  "_build/install/default/lib/transmission/transmission__Answer.cmx"
+  "_build/install/default/lib/transmission/transmission__Answer.cmt"
+  "_build/install/default/lib/transmission/transmission__Answer.cmti"
+  "_build/install/default/lib/transmission/answer.mli"
+  "_build/install/default/lib/transmission/transmission__Client.cmi"
+  "_build/install/default/lib/transmission/transmission__Client.cmx"
+  "_build/install/default/lib/transmission/transmission__Client.cmt"
+  "_build/install/default/lib/transmission/transmission__Client.cmti"
+  "_build/install/default/lib/transmission/client.mli"
+  "_build/install/default/lib/transmission/transmission__Request.cmi"
+  "_build/install/default/lib/transmission/transmission__Request.cmx"
+  "_build/install/default/lib/transmission/transmission__Request.cmt"
+  "_build/install/default/lib/transmission/transmission__Request.cmti"
+  "_build/install/default/lib/transmission/request.mli"
+  "_build/install/default/lib/transmission/transmission__Rpc.cmi"
+  "_build/install/default/lib/transmission/transmission__Rpc.cmx"
+  "_build/install/default/lib/transmission/transmission__Rpc.cmt"
+  "_build/install/default/lib/transmission/transmission__Rpc.cmti"
+  "_build/install/default/lib/transmission/rpc.mli"
+  "_build/install/default/lib/transmission/transmission.cmi"
+  "_build/install/default/lib/transmission/transmission.cmx"
+  "_build/install/default/lib/transmission/transmission.cmt"
+  "_build/install/default/lib/transmission/transmission.ml-gen"
+  "_build/install/default/lib/transmission/transmission.cma"
+  "_build/install/default/lib/transmission/transmission.cmxa"
+  "_build/install/default/lib/transmission/transmission.a"
+  "_build/install/default/lib/transmission/transmission.cmxs"
+]
+doc: [
+  "_build/install/default/doc/transmission/README.md"
+  "_build/install/default/doc/transmission/LICENSE.md"
+]
