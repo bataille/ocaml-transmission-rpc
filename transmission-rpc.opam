@@ -14,7 +14,7 @@ depends: [
   "jbuilder" {build & >= "1.0+beta10"}
   "lwt"
   "cohttp"
-  "cohttp.lwt"
+  "cohttp-lwt"
   "yojson"
   "ppx_deriving.show"
   "ppx_deriving_yojson"

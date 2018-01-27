@@ -2,7 +2,7 @@
 
 (library
  ((name        transmission)
-  (public_name transmission)
-  (libraries (lwt cohttp cohttp.lwt yojson ppx_deriving_yojson.runtime))
+  (public_name "transmission-rpc")
+  (libraries (lwt cohttp cohttp-lwt cohttp-lwt-unix yojson ppx_deriving_yojson.runtime))
   (preprocess (pps (ppx_deriving.show ppx_deriving_yojson)))
 ))

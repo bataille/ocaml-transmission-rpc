@@ -1,0 +1,8 @@
+# transmission-rpc
+
+doc: [
+  "_build/CHANGES.md" {"CHANGES.md"}
+  "_build/LICENSE.md" {"LICENSE.md"}
+  "_build/README.md" {"README.md"} ]
+lib: [
+  "_build/transmission-rpc.opam" {"transmission-rpc.opam"} ]
