@@ -27,7 +27,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }}}*)
 
-open Yojson
 open Ppx_deriving_yojson_runtime
 open Result
 
@@ -53,7 +52,7 @@ let get_return_arguments returned =
     (function ("arguments", json) -> Ok json
     |("result", `String "success") -> Ok x
     |("result", `String s) -> Error s
-    |("tag", t) -> Ok x
+    |("tag", _) -> Ok x
     |_ -> Error "Invalid return")
   in returned
   |> (function `Assoc l -> 
